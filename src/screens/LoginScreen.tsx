@@ -11,7 +11,7 @@ import Link from "../components/Link.tsx";
 
 type RootStackParamList = {
   Login: {
-    onLoginSuccess: () => void;
+    onRegistrationSuccess: () => void;
   };
   Home: undefined;
 };
@@ -28,13 +28,13 @@ type Props = {
 };
 
 const LoginScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { onLoginSuccess } = route.params;
+  const { onRegistrationSuccess } = route.params;
 
   const handleLogin = async () => {
     // Perform login logic here...
     const success = true; // Assuming login is successful
     if (success) {
-      onLoginSuccess();
+      onRegistrationSuccess();
     }
   };
 
@@ -45,9 +45,9 @@ const LoginScreen: React.FC<Props> = ({ route, navigation }) => {
         <WhatsAppInputField onChangeValue={() => {}} />
         <PasswordInputField onChangeValue={() => {}} />
         <OptionToggler text="Manter meu login ativo." />
-        <Button title="Login" onClick={handleLogin} />
+        <Button title="Login" onPress={handleLogin} />
       </View>
-      <Link to="" text="Não tenho login ainda." />
+      <Link handlePress={() => navigation.navigate('Register')} text="Não tenho login ainda." />
     </View>
   );
 };

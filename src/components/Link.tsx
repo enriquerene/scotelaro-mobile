@@ -2,14 +2,14 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface LinkProps {
-  to: string;
+  handlePress: () => void;
   text: string;
 }
 
-const Link: React.FC<LinkProps> = ({ text, to }) => {
+const Link: React.FC<LinkProps> = ({ text, handlePress }) => {
   return (
     <View style={style.container}>
-      <TouchableOpacity onPress={() => navigation.navigate(to)}>
+      <TouchableOpacity onPress={handlePress}>
         <Text style={style.text}>{text}</Text>
       </TouchableOpacity>
     </View>

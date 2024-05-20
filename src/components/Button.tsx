@@ -3,13 +3,13 @@ import colors from '../shared/colors';
 
 interface ButtonProps {
   title: string;
-  onClick: () => void;
+  onPress: () => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ title, onClick }) => {
+const Button: React.FC<ButtonProps> = ({ title, onPress }) => {
   return (
     <View style={buttonStyle.container}>
-      <TouchableOpacity style={buttonStyle.button} onPress={() => onClick()}>
+      <TouchableOpacity style={buttonStyle.button} onPress={() => onPress()}>
         <Text style={buttonStyle.text}>{title}</Text>
       </TouchableOpacity>
     </View>

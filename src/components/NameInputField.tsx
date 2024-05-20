@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Text } from 'react-native';
 import { textInputStyle } from '../shared/inputStyle';
 
-interface WhatsAppInputFieldProps {
+interface NameInputFieldProps {
   initialValue?: string;
   onChangeValue: (params: {
     valid: boolean;
@@ -11,30 +11,37 @@ interface WhatsAppInputFieldProps {
   }) => void;
 }
 
-const WhatsAppInputField: React.FC<WhatsAppInputFieldProps> = ({
+const NameInputField: React.FC<NameInputFieldProps> = ({
   initialValue = '',
   onChangeValue,
 }) => {
-  const [phoneNumber, setPhoneNumber] = useState<string>(initialValue);
+  const [name, setName] = useState<string>(initialValue);
   const [validationStatus, setValidationStatus] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [touched, setTouched] = useState<boolean>(false);
 
   const validateInput = () => {
-    const isValidPhoneNumberNoDDD: boolean = phoneNumber.length === 9;
-    const isValidPhoneNumberWithDDD: boolean = phoneNumber.length === 11;
-    setValidationStatus(true);
-    setErrorMessage('');
-    if (!isValidPhoneNumberNoDDD && !isValidPhoneNumberWithDDD) {
+    const namePieces: Array<string> = name.split(' ');
+    const numberOfNames: number = namePieces.length;
+    const containsManyNames: boolean = numberOfNames >= 2;
+    const containsOnlyAlphabeticalChars: boolean =
+      namePieces.filter((piece: string) => {
+        return piece.match(/^[A-Za-z]+$/);
+      }).length === numberOfNames;
+    if (!containsManyNames) {
       setValidationStatus(false);
-      setErrorMessage('Insira um número de telefone válido.');
-    } else if (isValidPhoneNumberNoDDD) {
-      setPhoneNumber(`21${phoneNumber}`);
+      setErrorMessage('Insira seu nome completo, nome e sobrenome.');
+    } else if (!containsOnlyAlphabeticalChars) {
+      setValidationStatus(false);
+      setErrorMessage('Nome completo só pode conter letras e espaços.');
+    } else {
+      setValidationStatus(true);
+      setErrorMessage('');
     }
     onChangeValue({
       valid: validationStatus,
       message: errorMessage,
-      value: phoneNumber,
+      value: name,
     });
   };
 
@@ -48,9 +55,8 @@ const WhatsAppInputField: React.FC<WhatsAppInputFieldProps> = ({
     return errorStyle.inputWithError;
   };
 
-  const handleChange: (text: string) => void = (text: string) => {
-    const formattedText = text.replace(/[^0-9]/g, '');
-    setPhoneNumber(formattedText);
+  const handleChange: (value: string) => void = (value: string) => {
+    setName(value);
     if (!touched) {
       setTouched(true);
     }
@@ -62,10 +68,9 @@ const WhatsAppInputField: React.FC<WhatsAppInputFieldProps> = ({
         style={[textInputStyle.input, getErrorStyle()]}
         onChangeText={handleChange}
         onBlur={validateInput}
-        value={phoneNumber}
-        keyboardType="phone-pad"
-        placeholder="WhatsApp"
-        maxLength={11}
+        value={name}
+        placeholder="Nome Completo"
+        maxLength={100}
       />
       <Text style={errorStyle.message}>{errorMessage}</Text>
     </View>
@@ -86,4 +91,4 @@ const errorStyle = StyleSheet.create({
   },
 });
 
-export default WhatsAppInputField;
+export default NameInputField;
