@@ -58,6 +58,7 @@ const PasswordInputField: React.FC<PasswordInputFieldProps> = ({
     if (!touched) {
       setTouched(true);
     }
+    validateInput();
   };
 
   const togglePasswordVisibility: () => void = () => {

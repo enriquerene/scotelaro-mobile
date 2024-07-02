@@ -5,10 +5,31 @@ class AuthStore {
   user: { name?: string; whatsapp?: string } = {};
   token: string = '';
   loading: boolean = false;
-  error: Error | null = null;
+  error: any = null;
 
   constructor() {
     makeObservable(this);
+  }
+
+  async userRegistration(
+    username: string,
+    password: string,
+    name: string,
+  ): Promise<string> {
+    this.loading = true;
+    try {
+      const response: { uuid: string } = await authService.register(
+        username,
+        password,
+        name,
+      );
+      this.loading = false;
+      return response.uuid;
+    } catch (error) {
+      this.error = error;
+      this.loading = false;
+      throw error;
+    }
   }
 
   async loginWithWhatsApp(username: string, password: string) {
@@ -39,4 +60,4 @@ class AuthStore {
   }
 }
 
-export default new AuthStore();
+export default AuthStore;

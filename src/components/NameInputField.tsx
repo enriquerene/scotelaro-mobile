@@ -26,7 +26,7 @@ const NameInputField: React.FC<NameInputFieldProps> = ({
     const containsManyNames: boolean = numberOfNames >= 2;
     const containsOnlyAlphabeticalChars: boolean =
       namePieces.filter((piece: string) => {
-        return piece.match(/^[A-Za-z]+$/);
+        return piece.match(/^[A-Za-zÁ-Üá-üçÇé']+$/);
       }).length === numberOfNames;
     if (!containsManyNames) {
       setValidationStatus(false);
@@ -56,10 +56,11 @@ const NameInputField: React.FC<NameInputFieldProps> = ({
   };
 
   const handleChange: (value: string) => void = (value: string) => {
-    setName(value);
+    setName(value.trim());
     if (!touched) {
       setTouched(true);
     }
+    validateInput();
   };
 
   return (

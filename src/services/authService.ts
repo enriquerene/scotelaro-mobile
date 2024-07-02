@@ -1,7 +1,30 @@
 class AuthService {
   basename: string;
+
   constructor(basename: string) {
     this.basename = basename;
+  }
+
+  async register(
+    username: string,
+    password: string,
+    name: string,
+  ): Promise<{
+    uuid: string;
+  }> {
+    const response = await fetch(`${this.basename}/auth/register`, {
+      method: 'POST',
+      body: JSON.stringify({
+        whatsapp: username,
+        senha: password,
+        nome: name,
+      }),
+    });
+    const json = await response.json();
+    const responseData = json.data;
+    return {
+      uuid: responseData.uuid,
+    };
   }
 
   async login(
@@ -14,11 +37,13 @@ class AuthService {
   }> {
     const response = await fetch(`${this.basename}/auth/login`, {
       method: 'POST',
-      body: JSON.stringify({ username: username, password: password }),
+      body: JSON.stringify({ whatsapp: username, senha: password }),
     });
     const json = await response.json();
-    const token = json.token;
-    const name = json.name;
+    console.log(json);
+    const responseData = json.data;
+    const token = responseData.token;
+    const name = responseData.name;
     return {
       token: token,
       name: name,
@@ -32,11 +57,8 @@ class AuthService {
       body: JSON.stringify({ token: token }),
     });
     const json = await response.json();
-    return json.code === 200;
+    return json.meta.code === 200;
   }
-  // getUserInfo(): Promise<UserInfo> {
-  //  implementation here
-  // }
 }
 
 export default new AuthService('http://localhost:8080');

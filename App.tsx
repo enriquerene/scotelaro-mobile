@@ -6,18 +6,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LoginScreen from './src/screens/LoginScreen';
 import RegistrationScreen from './src/screens/RegistrationScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import AuthStore from './src/stores/authStore';
+import { StoreContext } from './src/StoreContext.tsx';
+import authStore from './src/stores/authStore';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
-
-function MockComponent({ name }) {
-  return (
-    <View>
-      <Text>{name}</Text>
-    </View>
-  );
-}
 
 function MainApp() {
   const { handleLogout } = route.params;
@@ -32,34 +26,55 @@ function App() {
   // Assume isAuthenticated comes from your app's state management (like Redux, Context, etc.)
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
 
+  const authStore = new AuthStore();
+
+  const handleRegistration = async (
+    username: string,
+    password: string,
+    name: string,
+  ): Promise<void> => {
+    console.log('triggered');
+    const uuid = await authStore.userRegistration(username, password, name);
+    console.log(uuid);
+  };
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        {!isAuthenticated ? (
-          <>
+    <StoreContext.Provider value={{ authStore }}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          {!isAuthenticated ? (
+            <>
+              <Stack.Screen
+                name="Login"
+                component={LoginScreen}
+                options={{ headerShown: false }}
+                initialParams={{
+                  onLoginSuccess: () => setIsAuthenticated(true),
+                }}
+              />
+              <Stack.Screen
+                name="Register"
+                component={(props: any) => (
+                  <RegistrationScreen
+                    {...props}
+                    onRegistration={handleRegistration}
+                  />
+                )}
+                options={{ headerShown: false }}
+                initialParams={{ onRegistrationSuccess: handleRegistration }}
+              />
+            </>
+          ) : (
             <Stack.Screen
-              name="Login"
-              component={LoginScreen}
+              name="MainApp"
+              component={MainApp}
               options={{ headerShown: false }}
-              initialParams={{ onLoginSuccess: () => setIsAuthenticated(true) }}
+              initialParams={{ handleLogout: () => setIsAuthenticated(false) }}
             />
-            <Stack.Screen
-              name="Register"
-              component={RegistrationScreen}
-              options={{ headerShown: false }}
-              initialParams={{ onRegistrationSuccess: console.log }}
-            />
-          </>
-        ) : (
-          <Stack.Screen
-            name="MainApp"
-            component={MainApp}
-            options={{ headerShown: false }}
-            initialParams={{ handleLogout: () => setIsAuthenticated(false) }}
-          />
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </StoreContext.Provider>
   );
 }
 

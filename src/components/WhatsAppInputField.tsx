@@ -21,15 +21,12 @@ const WhatsAppInputField: React.FC<WhatsAppInputFieldProps> = ({
   const [touched, setTouched] = useState<boolean>(false);
 
   const validateInput = () => {
-    const isValidPhoneNumberNoDDD: boolean = phoneNumber.length === 9;
-    const isValidPhoneNumberWithDDD: boolean = phoneNumber.length === 11;
+    const isValidPhoneNumber: boolean = phoneNumber.length === 11;
     setValidationStatus(true);
     setErrorMessage('');
-    if (!isValidPhoneNumberNoDDD && !isValidPhoneNumberWithDDD) {
+    if (!isValidPhoneNumber) {
       setValidationStatus(false);
       setErrorMessage('Insira um número de telefone válido.');
-    } else if (isValidPhoneNumberNoDDD) {
-      setPhoneNumber(`21${phoneNumber}`);
     }
     onChangeValue({
       valid: validationStatus,
@@ -49,11 +46,22 @@ const WhatsAppInputField: React.FC<WhatsAppInputFieldProps> = ({
   };
 
   const handleChange: (text: string) => void = (text: string) => {
-    const formattedText = text.replace(/[^0-9]/g, '');
+    const formattedText = text
+      .replace(/[^0-9]/g, '')
+      .replace(/(\d{2})(\d{1,5})(\d+)?/, (_, p1, p2, p3) => {
+        if (p3) {
+          return `(${p1}) ${p2}-${p3}`;
+        }
+        if (p2) {
+          return `(${p1}) ${p2}`;
+        }
+        return `(${p1}`;
+      })
     setPhoneNumber(formattedText);
     if (!touched) {
       setTouched(true);
     }
+    validateInput();
   };
 
   return (
@@ -65,7 +73,7 @@ const WhatsAppInputField: React.FC<WhatsAppInputFieldProps> = ({
         value={phoneNumber}
         keyboardType="phone-pad"
         placeholder="WhatsApp"
-        maxLength={11}
+        maxLength={15}
       />
       <Text style={errorStyle.message}>{errorMessage}</Text>
     </View>

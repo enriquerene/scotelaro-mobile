@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Logo from '../components/Logo';
@@ -38,52 +44,60 @@ type Props = {
   navigation: RegistrationScreenNavigationProp;
 };
 
-const RegistrationScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { onRegistrationSuccess } = route.params;
+const RegistrationScreen: React.FC<Props> = ({ route, navigation, onRegistration}) => {
+  console.log(onRegistration);
   const [fullName, setFullName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
 
   const handleRegistration = async () => {
+    console.log('triggered button');
     const success: boolean =
       fullName !== '' && phoneNumber !== '' && password !== '';
+    console.log('fullName', fullName);
+    console.log('phoneNumber', phoneNumber);
+    console.log('password', password);
     if (success) {
-      onRegistrationSuccess();
+      onRegistration(phoneNumber, password, fullName);
     }
   };
 
   return (
-    <View style={style.container}>
-      <Logo width={280} verticalSpacing={50} />
-      <View style={style.form}>
-        <NameInputField
-          onChangeValue={(params: onChangeParamsProps): void => {
-            if (params.valid) {
-              setFullName(params.value);
-            }
-          }}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={style.container}>
+      <ScrollView style={{ flex: 1 }}>
+        <Logo width={280} verticalSpacing={50} />
+        <View style={style.form}>
+          <NameInputField
+            onChangeValue={(paramsProps: onChangeParamsProps): void => {
+              if (paramsProps.valid) {
+                setFullName(paramsProps.value);
+              }
+            }}
+          />
+          <WhatsAppInputField
+            onChangeValue={(paramsProps: onChangeParamsProps): void => {
+              if (paramsProps.valid) {
+                setPhoneNumber(paramsProps.value);
+              }
+            }}
+          />
+          <PasswordInputField
+            onChangeValue={(paramsProps: onChangeParamsProps): void => {
+              if (paramsProps.valid) {
+                setPassword(paramsProps.value);
+              }
+            }}
+          />
+          <Button title="Registrar" onPress={handleRegistration} />
+        </View>
+        <Link
+          handlePress={() => navigation.navigate('Login')}
+          text="Já tenho uma conta."
         />
-        <WhatsAppInputField
-          onChangeValue={(params: onChangeParamsProps): void => {
-            if (params.valid) {
-              setPhoneNumber(params.value);
-            }
-          }}
-        />
-        <PasswordInputField
-          onChangeValue={(params: onChangeParamsProps): void => {
-            if (params.valid) {
-              setPassword(params.value);
-            }
-          }}
-        />
-        <Button title="Registrar" onPress={handleRegistration} />
-      </View>
-      <Link
-        handlePress={() => navigation.navigate('Login')}
-        text="Já tenho uma conta."
-      />
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
