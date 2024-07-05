@@ -9,8 +9,8 @@ import Backend from "../services/backend.service";
 const FormCadastro = ({sucesso, falha}) => {
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
-
   const [senha, setSenha] = useState("");
+
   const enviaForm = async () => {
     const dados = {nome, whatsapp: telefone.replace(/\D/g,''), senha}
     const res = await Backend.registrar(dados);

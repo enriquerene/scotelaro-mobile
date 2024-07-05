@@ -1,6 +1,6 @@
 import React from 'react';
 import TituloDaTela from "../components/TituloDaTela";
-import ItemNotificacao from "../components/ItemNotificacao";
+import ItemComunicado from "../components/ItemComunicado";
 import IconeComTitulo from "../components/IconeComTitulo";
 
 const mockNotificacoes = [
@@ -60,14 +60,14 @@ const mockNotificacoes = [
       color: 'green'
     }
   },
-]
+];
 
-const TelaFinanceiro = () => {
+const TelaComunicados = () => {
   return(
     <div>
       {
         mockNotificacoes.map(notificacao => (
-          <ItemNotificacao
+          <ItemComunicado
             data={notificacao.data}
             titulo={notificacao.titulo}
             descricao={notificacao.descricao}
@@ -81,4 +81,4 @@ const TelaFinanceiro = () => {
   )
 };
 
-export default TelaFinanceiro;
+export default TelaComunicados;

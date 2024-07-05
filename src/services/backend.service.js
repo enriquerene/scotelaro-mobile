@@ -4,7 +4,6 @@ class BackendService {
     REGISTER: `${this.BASE_URL}/auth/registrar`,
     LOGIN: `${this.BASE_URL}/auth/login`,
   }
-
   static STATUS = {
     BEM_SUCEDIDO: (s) => (s === 200 || s === 201)
   }
@@ -20,6 +19,10 @@ class BackendService {
 
   static async registrar(dados) {
     return await this.postData(this.ENDPOINTS.REGISTER, dados);
+  }
+
+  static async login(dados) {
+    return await this.postData(this.ENDPOINTS.LOGIN, dados);
   }
 }
 

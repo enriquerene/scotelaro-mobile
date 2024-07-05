@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Route,
   Routes,
@@ -8,6 +8,8 @@ import {
 } from 'react-router-dom';
 import BarraDeNavegacao from "./BarraDeNavegacao";
 import TelaFinanceiro from "../screens/TelaFinanceiro";
+import {useUserStore} from "../services/userStore.context";
+import TituloDaTela from "./TituloDaTela";
 
 const Mock = ({nome}) => {
   const funcionalidadesDasTelas = {
@@ -33,19 +35,23 @@ const Mock = ({nome}) => {
   );
 }
 
-const Frame = ({isAuthenticated, children}) => {
+const Frame = ({children}) => {
   const location = useLocation();
-  const iconeAtivo = location.pathname.replace('/app/', '');
+  const telaAtual = location.pathname.replace('/app/', '');
   const navigate = useNavigate();
+  const { credenciais } = useUserStore();
+
+  const [tituloTela, setTituloTela] = useState('');
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!credenciais) {
       navigate('/login');
     }
-  }, [isAuthenticated, navigate]);
+  }, [credenciais, navigate]);
 
   return (
     <div>
+      <TituloDaTela titulo={telaAtual} />
       <Routes>
         <Route path="calendario" element={<Mock nome="calendario"/>}/>
         <Route path="financeiro" element={<TelaFinanceiro />}/>
@@ -54,7 +60,7 @@ const Frame = ({isAuthenticated, children}) => {
         <Route path="mensagens" element={<Mock nome="mensagens"/>}/>
         <Route path="*" element={<Navigate to="turmas"/>}/>
       </Routes>
-      <BarraDeNavegacao iconeAtivo={iconeAtivo}/>
+      <BarraDeNavegacao iconeAtivo={telaAtual}/>
       <Outlet/>
     </div>
   );
