@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Navigate, useNavigate
+  useNavigate
 } from 'react-router-dom';
 import TelaLogin from './screens/TelaLogin';
 import TelaCadastro from "./screens/TelaCadastro";
@@ -15,7 +15,7 @@ import {useEffect} from "react";
 
 const FrameOrLogin = () => {
   const navigate = useNavigate();
-  const { credenciais } = useUserStore();
+  const { credenciais, loginPermanente } = useUserStore();
   useEffect(() => {
     if (!credenciais) {
       navigate("/login");
@@ -23,6 +23,8 @@ const FrameOrLogin = () => {
       navigate("/app/");
     }
   }, [credenciais, navigate]);
+
+  return null;
 }
 
 function App() {

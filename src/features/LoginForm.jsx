@@ -13,11 +13,15 @@ const LoginForm = ({sucesso, falha}) => {
 
   const enviaForm = async () => {
     const dados = {whatsapp: telefone.replace(/\D/g,''), senha}
-    const res = await Backend.login(dados);
-    if (Backend.STATUS.BEM_SUCEDIDO(res.status.code)) {
-      sucesso(res.data, lembrar);
-    } else {
-      falha(res.data);
+    try {
+      const res = await Backend.login(dados);
+      if (Backend.STATUS.BEM_SUCEDIDO(res.status.code)) {
+        sucesso(res.data, lembrar);
+      } else {
+        falha(res.data);
+      }
+    } catch (e) {
+      falha({message: 'Falha de conexão com o servidor. Tente novamente mais tarde.'});
     }
   }
 

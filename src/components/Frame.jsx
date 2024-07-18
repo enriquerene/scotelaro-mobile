@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import BarraDeNavegacao from "./BarraDeNavegacao";
 import TelaFinanceiro from "../screens/TelaFinanceiro";
+import TelaTurmas from "../screens/TelaTurmas";
 import {useUserStore} from "../services/userStore.context";
 import TituloDaTela from "./TituloDaTela";
 
@@ -35,13 +36,12 @@ const Mock = ({nome}) => {
   );
 }
 
-const Frame = ({children}) => {
+const Frame = () => {
   const location = useLocation();
+
   const telaAtual = location.pathname.replace('/app/', '');
   const navigate = useNavigate();
   const { credenciais } = useUserStore();
-
-  const [tituloTela, setTituloTela] = useState('');
 
   useEffect(() => {
     if (!credenciais) {
@@ -50,13 +50,13 @@ const Frame = ({children}) => {
   }, [credenciais, navigate]);
 
   return (
-    <div>
+    <div id="frame">
       <TituloDaTela titulo={telaAtual} />
       <Routes>
         <Route path="calendario" element={<Mock nome="calendario"/>}/>
         <Route path="financeiro" element={<TelaFinanceiro />}/>
         <Route path="perfil" element={<Mock nome="perfil"/>}/>
-        <Route path="turmas" element={<Mock nome="turmas"/>}/>
+        <Route path="turmas" element={<TelaTurmas />}/>
         <Route path="mensagens" element={<Mock nome="mensagens"/>}/>
         <Route path="*" element={<Navigate to="turmas"/>}/>
       </Routes>

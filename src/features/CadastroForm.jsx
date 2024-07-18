@@ -13,11 +13,15 @@ const FormCadastro = ({sucesso, falha}) => {
 
   const enviaForm = async () => {
     const dados = {nome, whatsapp: telefone.replace(/\D/g,''), senha}
-    const res = await Backend.registrar(dados);
-    if (Backend.STATUS.BEM_SUCEDIDO(res.status.code)) {
-      sucesso(res.data);
-    } else {
-      falha(res.data);
+    try {
+      const res = await Backend.registrar(dados);
+      if (Backend.STATUS.BEM_SUCEDIDO(res.status.code)) {
+        sucesso(res.data);
+      } else {
+        falha(res.data);
+      }
+    } catch (e) {
+      falha({message: 'Falha de conexão com o servidor. Tente novamente mais tarde.'});
     }
   }
 

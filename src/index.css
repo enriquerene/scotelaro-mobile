@@ -6544,6 +6544,20 @@ textarea.form-control-lg {
   top: 10px;
 }
 
+.filtro select,
+.filtro input,
+.filtro option {
+  font-size: 14px;
+  background: white;
+}
+.filtro select,
+.filtro input {
+  padding: 4px;
+}
+.filtro option {
+  margin-right: 8px;
+}
+
 body {
   max-width: 100%;
   overflow-x: hidden;
@@ -6553,6 +6567,21 @@ body {
 ul {
   margin: 0;
   padding: 0;
+}
+
+#frame {
+  height: 100vh;
+  overflow-y: hidden;
+}
+
+.scrollable-container {
+  overflow-y: auto;
+}
+.scrollable-container.turmas-scroll {
+  max-height: calc(100vh - 210px);
+}
+.scrollable-container.financeiro-scroll {
+  max-height: calc(100vh - 420px);
 }
 
 input.input {
@@ -6583,6 +6612,7 @@ div.input input {
 }
 div.input .icon {
   flex-shrink: 0;
+  display: flex;
 }
 
 .error-message {

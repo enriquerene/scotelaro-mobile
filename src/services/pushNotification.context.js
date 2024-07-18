@@ -3,11 +3,6 @@ import React, {createContext, useContext, useState} from "react";
 const PushNotificationContext = createContext();
 
 export const PushNotificationProvider = ({children}) => {
-  const notificacaoInicial = {
-    visivel: false,
-    mensagem: '',
-    tipo: 'info'
-  };
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [type, setType] = useState('info');

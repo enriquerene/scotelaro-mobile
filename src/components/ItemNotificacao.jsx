@@ -17,6 +17,23 @@ const ItemNotificacao = ({data, titulo, descricao, icone, tipo, detalhes}) => {
     };
     return dias[d.getDay()];
   }
+  const obtemMes = () => {
+    const meses = {
+      0: 'Janeiro',
+      1: 'Fevereiro',
+      2: 'Março',
+      3: 'Abril',
+      4: 'Maio',
+      5: 'Junho',
+      6: 'Julho',
+      7: 'Agosto',
+      8: 'Setembro',
+      9: 'Outubro',
+      10: 'Novembro',
+      11: 'Dezembro'
+    };
+    return meses[d.getMonth()];
+  }
   const obtemHorario = () => {
     const hora = d.getHours();
     const min = d.getMinutes();
@@ -35,7 +52,7 @@ const ItemNotificacao = ({data, titulo, descricao, icone, tipo, detalhes}) => {
     if (icone) {
       return (
         <>
-          <div className="item-notificacao-icone d-flex justify-content-center align-items-center">{icone}</div>
+          <div className="item-notificacao-icone d-flex justify-content-center align-items-center" style={{width: 58}}>{icone}</div>
           <Toggler/>
         </>
       );
@@ -73,7 +90,7 @@ const ItemNotificacao = ({data, titulo, descricao, icone, tipo, detalhes}) => {
       <div className="d-flex flex-row item-notificacao-topo">
         <div className="item-notificacao-data d-flex flex-column align-items-center py-1 px-2">
           <strong className="dia-do-mes">{d.getDay()}</strong>
-          <span className="dia-da-semana">{obtemDiaDaSemana()}</span>
+          <span className="dia-da-semana">{obtemMes()}</span>
           <span className="horario">{obtemHorario()}</span>
         </div>
         <div className="item-notificacao-centro d-flex flex-column justify-content-around flex-grow-1 px-3 py-1">

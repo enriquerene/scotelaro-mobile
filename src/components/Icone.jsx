@@ -13,9 +13,18 @@ import IconeEye from "./IconeEye";
 import IconeEyeSlash from "./IconeEyeSlash";
 import IconeWarningCircle from "./IconeWarningCircle";
 import IconeInfoCircle from "./IconeInfoCircle";
+import IconeClock from "./IconeClock";
+import IconeQRCode from "./IconeQRCode";
+import IconeDocs from "./IconeDocs";
 
 const Icone = ({name, size, color}) => {
   const cores = {
+    'primary': '#F3AE42',
+    'danger': '#FF4444',
+    'success': '#02e813',
+    'paid': '#AEEFAE',
+    'pending': '#ead083',
+    'overdue': '#ffabab',
     'green': '#006800',
     'red': '#8a0000',
     'orange': '#b67c0d',
@@ -24,7 +33,7 @@ const Icone = ({name, size, color}) => {
   const icones = {
     'calendario': <IconeCalendar fill={cor} width={size} height={size} />,
     'financeiro': <IconeMoney fill={cor} width={size} height={size} />,
-    'perfil': <IconeScotelaro cor={cor === 'white' ? 'white' : 'primary'} />,
+    'perfil': <IconeScotelaro color={cor === 'white' ? 'white' : 'primary'} />,
     'turmas': <IconeGroup fill={cor} width={size} height={size} />,
     'mensagens': <IconeNotification fill={cor} width={size} height={size} />,
     'expandir': <IconeExpandMore fill={cor} width={size} height={size} />,
@@ -36,6 +45,9 @@ const Icone = ({name, size, color}) => {
     'info-circle': <IconeInfoCircle fill={cor} width={size} height={size} />,
     'eye': <IconeEye fill={cor} width={size} height={size} />,
     'eye-slash': <IconeEyeSlash fill={cor} width={size} height={size} />,
+    'relogio': <IconeClock fill={cor} width={size} height={size} />,
+    'qrcode': <IconeQRCode fill={cor} width={size} height={size} />,
+    'docs': <IconeDocs fill={cor} width={size} height={size} />,
   }
   return icones[name];
 }

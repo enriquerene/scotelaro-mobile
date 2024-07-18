@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import TemplateCredenciais from "../components/TemplateCredenciais";
 import FormLogin from "../features/LoginForm";
 import {useNavigate} from "react-router-dom";
@@ -8,14 +8,16 @@ import {useUserStore} from "../services/userStore.context";
 const TelaLogin = () => {
   const navigate = useNavigate();
   const { notificar } = useNotification();
-  const { login, credenciais } = useUserStore();
+  const { login, credenciais, permaneceLogado } = useUserStore();
 
   useEffect(() => {
     if (credenciais) {
-      notificar({
-        mensagem: 'Login realizado com sucesso',
-        tipo: 'sucesso'
-      });
+      if (!permaneceLogado) {
+        notificar({
+          mensagem: 'Login realizado com sucesso',
+          tipo: 'sucesso'
+        });
+      }
       navigate('/app/');
     }
   }, [credenciais, navigate, notificar]);

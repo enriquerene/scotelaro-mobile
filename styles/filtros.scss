@@ -1,0 +1,17 @@
+.filtro {
+
+
+  select,
+  input,
+  option {
+    font-size: 14px;
+    background: white;
+  }
+  select,
+  input {
+    padding: 4px;
+  }
+  option {
+    margin-right: 8px;
+  }
+}
