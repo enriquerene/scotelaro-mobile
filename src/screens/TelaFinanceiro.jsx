@@ -4,6 +4,7 @@ import IconeComTitulo from "../components/IconeComTitulo";
 import Icone from "../components/Icone";
 import FiltroData from "../components/FiltroData";
 import {useNotification} from "../services/pushNotification.context";
+import {useUserStore} from "../services/userStore.context";
 
 
 const mockNotificacoes = [
@@ -167,37 +168,42 @@ const mockNotificacoes = [
   },
 ];
 
-const CardFinanceiro = () => {
-  return (
-    <div className="border border-2 border-black m-3 p-1 d-flex justify-content-center flex-column align-items-center">
-      <div className="border border-2 border-black bg-white text-center" style={{marginTop: -15, width: 115}}>
-        <small>PLANO MENSAL</small>
-      </div>
-      <div className="py-3" style={{width: '95%'}}>
-        <h3 className="m-0">
-          Plano Muay Thai e MMA
-          <br/><span className="text-primary" style={{fontSize: 20}}>R$ 200,00</span>
-        </h3>
-        <div className="d-flex my-3">
-          <Icone name="qrcode" size={42} color="grey"/>
-          <div className="d-flex flex-column justify-content-center">
-            <button className="bg-white border border-0 m-0 p-0 text-left text-green"
-                    style={{fontSize: 16, width: 102}}><strong>Pagar via PIX</strong></button>
-            <small><span className="text-muted">Válido até</span> <strong>10/08/2024</strong></small>
+const CardFinanceiro = ({plano}) => {
+  if (plano) {
+    return (
+      <div className="border border-2 border-black m-3 p-1 d-flex justify-content-center flex-column align-items-center">
+        <div className="border border-2 border-black bg-white text-center" style={{marginTop: -15, width: 115}}>
+          <small>PLANO MENSAL</small>
+        </div>
+        <div className="py-3" style={{width: '95%'}}>
+          <h3 className="m-0">
+            {plano.nome}
+            <br/><span className="text-primary" style={{fontSize: 20}}>R$ 200,00</span>
+          </h3>
+          <div className="d-flex my-3">
+            <Icone name="qrcode" size={42} color="grey"/>
+            <div className="d-flex flex-column justify-content-center">
+              <button className="bg-white border border-0 m-0 p-0 text-left text-green"
+                      style={{fontSize: 16, width: 102}}><strong>Pagar via PIX</strong></button>
+              <small><span className="text-muted">Válido até</span> <strong>10/08/2024</strong></small>
+            </div>
+          </div>
+          <div className="d-flex justify-content-between">
+            <button className="bg-white border border-0 m-0 p-0 text-primary d-flex align-items-center">
+              <Icone name="docs" size={20} color="primary"/>
+              <strong className="px-1 pt-1">Ver contrato</strong>
+            </button>
+            <button className="bg-white border border-0 m-0 p-0 text-danger d-flex align-items-center">
+              <Icone name="docs" size={20} color="danger"/>
+              <strong className="px-1 pt-1">Cancelar plano</strong>
+            </button>
           </div>
         </div>
-        <div className="d-flex justify-content-between">
-          <button className="bg-white border border-0 m-0 p-0 text-primary d-flex align-items-center">
-            <Icone name="docs" size={20} color="primary"/>
-            <strong className="px-1 pt-1">Ver contrato</strong>
-          </button>
-          <button className="bg-white border border-0 m-0 p-0 text-danger d-flex align-items-center">
-            <Icone name="docs" size={20} color="danger"/>
-            <strong className="px-1 pt-1">Cancelar plano</strong>
-          </button>
-        </div>
       </div>
-    </div>
+    );
+  }
+  return (
+    <div>Escolher plano</div>
   );
 }
 
@@ -230,6 +236,7 @@ const TelaFinanceiro = () => {
   const [dataFinal, setDataFinal] = useState(null);
   const [notificacoesFiltradas, setNotificacoesFiltradas] = useState([]);
   const {notificar} = useNotification();
+  const {credenciais} = useUserStore();
 
   const reset = () => {
     setDataFinal(null);
@@ -273,7 +280,7 @@ const TelaFinanceiro = () => {
 
   return (
     <>
-      <CardFinanceiro/>
+      <CardFinanceiro plano={credenciais.plano} />
       <div className="d-flex flex-row align-items-center justify-content-evenly my-3">
         <FiltroData titulo="Data inicial" valorAtual={dataInicial} onChange={setDataInicial}/>
         <FiltroData titulo="Data final" valorAtual={dataFinal} onChange={setDataFinal}/>
