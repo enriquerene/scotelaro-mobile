@@ -1,8 +1,19 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const CampoTelefone = ({onSuccess}) => {
   const [telefone, setTelefone] = useState('');
   const [erro, setErro] = useState('');
+
+  useEffect(() => {
+      if (telefone) {
+          validacao()
+      }
+  }, []);
+    useEffect(() => {
+        if (telefone) {
+            validacao()
+        }
+    }, [telefone]);
 
   const mascara = (value) => {
     return value
@@ -44,6 +55,7 @@ const CampoTelefone = ({onSuccess}) => {
         onChange={(e) => setTelefone(mascara(e.target.value))}
         onBlur={validacao}
         onFocus={() => {setErro('')}}
+        onLoad={validacao}
       />
       <span className="text-danger px-1 error-message">{erro}</span>
     </div>

@@ -11,6 +11,8 @@ import TelaFinanceiro from "../screens/TelaFinanceiro";
 import TelaTurmas from "../screens/TelaTurmas";
 import {useUserStore} from "../services/userStore.context";
 import TituloDaTela from "./TituloDaTela";
+import BackendService from "../services/backend.service";
+const contatoWhatsApp = '5521970179121';
 
 const Mock = ({nome}) => {
   const funcionalidadesDasTelas = {
@@ -39,9 +41,21 @@ const Mock = ({nome}) => {
 const Frame = () => {
   const location = useLocation();
 
+  const [planos, setPlanos] = useState([]);
+
   const telaAtual = location.pathname.replace('/app/', '');
   const navigate = useNavigate();
   const { credenciais } = useUserStore();
+
+  useEffect(() => {
+      const obterPlanos = async () => {
+          const res = await BackendService.obterListaDePlanos();
+          if (BackendService.STATUS.BEM_SUCEDIDO(res.status.code)) {
+              setPlanos(res.data);
+          }
+      }
+      obterPlanos();
+  }, []);
 
   useEffect(() => {
     if (!credenciais) {
@@ -49,14 +63,22 @@ const Frame = () => {
     }
   }, [credenciais, navigate]);
 
+  const inscricaoEmTurma = () => {
+      navigate('financeiro');
+  }
+  const inscricaoAulaExperimental = (nomeDaTurma) => {
+      // navigate(`whatsapp://send?phone=${contatoWhatsApp}&text=Gostaria de fazer uma aula experimental na turma ${nomeDaTurma}.`);
+      window.location.href = `whatsapp://send?phone=${contatoWhatsApp}&text=Gostaria de fazer uma aula experimental na turma ${nomeDaTurma}.`;
+  }
+
   return (
     <div id="frame">
       <TituloDaTela titulo={telaAtual} />
       <Routes>
         <Route path="calendario" element={<Mock nome="calendario"/>}/>
-        <Route path="financeiro" element={<TelaFinanceiro />}/>
+        <Route path="financeiro" element={<TelaFinanceiro planos={planos} />}/>
         <Route path="perfil" element={<Mock nome="perfil"/>}/>
-        <Route path="turmas" element={<TelaTurmas />}/>
+        <Route path="turmas" element={<TelaTurmas acaoInscricao={inscricaoEmTurma} acaoExperimental={inscricaoAulaExperimental} />}/>
         <Route path="mensagens" element={<Mock nome="mensagens"/>}/>
         <Route path="*" element={<Navigate to="turmas"/>}/>
       </Routes>

@@ -1,15 +1,19 @@
 import React, {useEffect} from 'react';
 
-const FiltroSelect = ({opcoes, titulo, onChange, opcaoAtual}) => {
+const FiltroSelect = ({opcoes, titulo, onChange, opcaoAtual, opcaoNula}) => {
   const [valor, setValor] = React.useState(opcaoAtual ?? opcoes[0]);
 
   useEffect(() => {
     if (opcaoAtual) {
       setValor(opcaoAtual);
     } else {
-      setValor(opcoes[0]);
+      if (opcaoNula) {
+        setValor(opcaoNula);
+      } else {
+        setValor(opcoes[0]);
+      }
     }
-  });
+  }, []);
 
   const manipulaMudanca = (ev) => {
     const id = parseInt(ev.target.value);
@@ -24,7 +28,7 @@ const FiltroSelect = ({opcoes, titulo, onChange, opcaoAtual}) => {
       <select
         className="text-muted border rounded shadow"
         onChange={manipulaMudanca}
-        value={valor.id}
+        value={valor ? valor.id : null}
       >
         {opcoes.map((opcao) => (
           <option

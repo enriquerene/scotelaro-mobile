@@ -1,7 +1,37 @@
 import React from "react";
 import Icone from "./Icone";
 
-const CardTurma = ({descricao, valor, horarios, modalidade, nome, manipuladorInscricao}) => {
+const BotoesCasoInscrito = () => {
+  return (
+      <div className="botoes d-flex justify-content-evenly m-2">
+        <button onClick={() => {}} className="btn btn-outline-dark w-100">Inscrito</button>
+      </div>
+  );
+}
+
+const BotoesCasoNaoInscrito = ({manipuladorInscricao}) => {
+  return (
+    <div className="botoes d-flex justify-content-evenly my-2">
+      <button onClick={() => {
+        manipuladorInscricao(false)
+      }} className="btn btn-outline-primary">Aula experimental
+      </button>
+      <button onClick={() => {
+        manipuladorInscricao(true)
+      }} className="btn btn-primary text-white">Inscrever-se
+      </button>
+    </div>
+  );
+}
+
+const BotoesDoCard = ({manipuladorInscricao, inscrito}) => {
+  return (inscrito
+    ? <BotoesCasoInscrito />
+    : <BotoesCasoNaoInscrito manipuladorInscricao={manipuladorInscricao} />
+  );
+}
+
+const CardTurma = ({inscrito, descricao, valor, horarios, modalidade, nome, manipuladorInscricao}) => {
   const nomeDoDiaAPartirDoNumero = (num) => {
     const dias = {
       '0': 'Domingo',
@@ -45,7 +75,7 @@ const CardTurma = ({descricao, valor, horarios, modalidade, nome, manipuladorIns
           </li>
           <li className="d-flex align-items-center">
             <Icone name="relogio" size={20} color="grey"/>
-            <small className="text-muted mx-1">{obtemHorario()}</small>
+            <small className="text-muted my-3 mx-1">{obtemHorario()}</small>
           </li>
           <li className="d-flex align-items-center">
             <Icone name="financeiro" size={20} color="grey"/>
@@ -54,14 +84,7 @@ const CardTurma = ({descricao, valor, horarios, modalidade, nome, manipuladorIns
         </ul>
         <small className="w-50 m-0 text-muted">{descricao ?? modalidade.descricao}</small>
       </div>
-      <div className="botoes d-flex justify-content-evenly my-2">
-        <button onClick={() => {
-          manipuladorInscricao(false)
-        }} className="btn btn-outline-primary">Aula experimental</button>
-        <button onClick={() => {
-          manipuladorInscricao(true)
-        }} className="btn btn-primary text-white">Inscrever-se</button>
-      </div>
+      <BotoesDoCard manipuladorInscricao={manipuladorInscricao} inscrito={inscrito} />
     </div>
   );
 }

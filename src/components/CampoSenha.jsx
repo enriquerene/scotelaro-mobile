@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Icone from "./Icone";
 
 const CampoSenha = ({onSuccess}) => {
@@ -8,6 +8,17 @@ const CampoSenha = ({onSuccess}) => {
 
   const ICONE_MOSTRAR = 'eye';
   const ICONE_ESCONDER = 'eye-slash';
+
+  useEffect(() => {
+    if (senha) {
+      validacao();
+    }
+  }, []);
+  useEffect(() => {
+    if (senha) {
+      validacao();
+    }
+  }, [senha]);
 
   const temOitoCaracteres = (val) => {
     return val.length >= 8;

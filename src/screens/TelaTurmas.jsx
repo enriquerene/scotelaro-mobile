@@ -3,6 +3,7 @@ import CardTurma from "../components/CardTurma";
 import FiltroSelect from "../components/FiltroSelect";
 import BackendService from "../services/backend.service";
 import {useNotification} from "../services/pushNotification.context";
+import {useUserStore} from "../services/userStore.context";
 
 const SemTurmasDisponiveis = ({reset}) => {
   return (
@@ -14,31 +15,45 @@ const SemTurmasDisponiveis = ({reset}) => {
   );
 }
 
-const ListaDeTurmas = ({lista, reset, inscricaoNaTurma}) => {
+const ListaDeTurmas = ({lista, reset, inscricaoNaTurma, planoAtual}) => {
   if (lista.length > 0) {
-    return lista.map((turma) => (
-      <div className="mt-3" key={turma.id}>
-        <CardTurma
-          modalidade={turma.modalidade.nome}
-          descricao={turma.modalidade.descricao}
-          valor={turma.valor}
-          horarios={turma.horarios}
-          nome={turma.nome}
-          manipuladorInscricao={inscricaoNaTurma(turma)}
-        />
-      </div>
-    ));
+    return lista
+        .sort(turma => {
+          if (planoAtual) {
+            if (planoAtual.turmas.find(t => t.id === turma.id)) {
+              return -1;
+            }
+          }
+          return 1;
+        })
+        .map((turma) => {
+      const inscrito = planoAtual ? planoAtual.turmas.find(t => t.id === turma.id) : false;
+      return (
+          <div className="mt-3" key={turma.id}>
+            <CardTurma
+                modalidade={turma.modalidade.nome}
+                descricao={turma.modalidade.descricao}
+                valor={turma.valor}
+                horarios={turma.horarios}
+                nome={turma.nome}
+                manipuladorInscricao={inscricaoNaTurma(turma)}
+                inscrito={inscrito}
+            />
+          </div>
+      );
+    });
   }
   return <SemTurmasDisponiveis reset={reset}/>
 }
 
-const TelaTurmas = () => {
+const TelaTurmas = ({acaoInscricao, acaoExperimental}) => {
   const [turmas, setTurmas] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [modalidadeEscolhida, setModalidadeEscolhida] = React.useState({id: 0, texto: 'Todas'});
   const [horarioEscolhido, setHorarioEscolhido] = React.useState({id: 0, texto: 'Todos'});
   const [turmasFiltradas, setTurmasFiltradas] = React.useState([]);
 
+  const {credenciais} = useUserStore();
   const {notificar} = useNotification();
 
   const opcoesDeModalidades = [
@@ -84,10 +99,10 @@ const TelaTurmas = () => {
     if (horaInicial < '12:00:00') {
       return 'manha';
     }
-    if (horaInicial >= '12:00:00' && horaInicial < '17:30:00') {
+    if (horaInicial >= '12:00:00' && horaInicial < '17:00:00') {
       return 'tarde';
     }
-    if (horaInicial >= '17:30:00') {
+    if (horaInicial >= '17:00:00') {
       return 'noite';
     }
   }
@@ -105,7 +120,7 @@ const TelaTurmas = () => {
     const comFiltros = turmas
       .filter(turma => {
         if (modalidadeEscolhida.id !== 0) {
-          return turma.modalidade.id === modalidadeEscolhida.id
+            return turma.modalidade.nome.toLowerCase() === modalidadeEscolhida.texto.toLowerCase()
         }
         return true;
       })
@@ -125,12 +140,10 @@ const TelaTurmas = () => {
         if (BackendService.STATUS.BEM_SUCEDIDO(r.status.code)) {
           setTurmas(r.data);
         } else {
-          console.log(r);
-          // notificar('Falha de conexão com o servidor. Não foi possível carregar turmas disponíveis.', 'erro');
+          notificar({mensagem: 'Falha de conexão com o servidor. Não foi possível carregar turmas disponíveis.', tipo: 'erro'});
         }
       } catch (e) {
-        console.log(e);
-        // notificar('Falha de conexão com o servidor. Não foi possível carregar turmas disponíveis.', 'erro');
+        notificar({mensagem: 'Falha de conexão com o servidor. Não foi possível carregar turmas disponíveis.', tipo: 'erro'});
       } finally {
         setCarregando(false);
       }
@@ -140,6 +153,19 @@ const TelaTurmas = () => {
 
   const inscricaoEmTurma = (turma) => {
     return (permanentemente) => {
+      if (permanentemente) {
+        notificar({
+          mensagem: `É necessário se increver em um plano vinculado a turma ${turma.nome}.`,
+          tipo: 'info'
+        });
+        acaoInscricao();
+      } else {
+        notificar({
+          mensagem: `O professor responsável será notificado do seu interesse na turma ${turma.nome}.`,
+          tipo: 'info'
+        });
+        acaoExperimental(turma.nome);
+      }
       console.log('turma escolhida:', turma);
       console.log('inscricao permanete: ', permanentemente);
     }
@@ -157,7 +183,7 @@ const TelaTurmas = () => {
         <FiltroSelect onChange={filtraPorHorario} titulo="Horários" opcoes={opcoesDeHorarios} opcaoAtual={horarioEscolhido} />
       </div>
       <div className="px-2 mt-3 scrollable-container turmas-scroll">
-        <ListaDeTurmas lista={turmasFiltradas} reset={reset} inscricaoNaTurma={inscricaoEmTurma} />
+        <ListaDeTurmas lista={turmasFiltradas} reset={reset} inscricaoNaTurma={inscricaoEmTurma} planoAtual={credenciais ? credenciais.plano : null} />
       </div>
     </>
   );

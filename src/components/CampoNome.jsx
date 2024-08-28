@@ -1,8 +1,19 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const CampoNome = ({onSuccess}) => {
   const [nome, setNome] = useState('');
   const [erro, setErro] = useState('');
+
+  useEffect(() => {
+    if (nome) {
+      validacao();
+    }
+  }, []);
+  useEffect(() => {
+    if (nome) {
+      validacao();
+    }
+  }, [nome]);
 
   const nomeUnico = (value) => {
     return value.trim().split(' ').length === 1;
