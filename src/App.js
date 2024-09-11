@@ -11,11 +11,13 @@ import Frame from "./components/Frame";
 import PushNotification from "./components/PushNotification";
 import {PushNotificationProvider} from "./services/pushNotification.context";
 import {UserStoreProvider, useUserStore} from "./services/userStore.context";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import BackendService from "./services/backend.service";
+import Logo from "./components/Logo";
 
 const FrameOrLogin = () => {
   const navigate = useNavigate();
-  const { credenciais, loginPermanente } = useUserStore();
+  const {credenciais, loginPermanente} = useUserStore();
   useEffect(() => {
     if (!credenciais) {
       navigate("/login");
@@ -28,16 +30,37 @@ const FrameOrLogin = () => {
 }
 
 function App() {
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState(null);
+  const [turmas, setTurmas] = useState([]);
+
+  useEffect(() => {
+    const turmasDoServidor = async () => {
+      try {
+        const r = await BackendService.obterListaDeTurmas();
+        if (BackendService.STATUS.BEM_SUCEDIDO(r.status.code)) {
+          setTurmas(r.data);
+        }
+      } catch (e) {
+        console.error('Exception!');
+        setErro(e.message);
+      } finally {
+        setCarregando(false);
+      }
+    }
+    turmasDoServidor();
+  }, []);
+
   return (
     <UserStoreProvider>
       <PushNotificationProvider>
         <PushNotification/>
         <Router>
           <Routes>
-            <Route path="/login" element={<TelaLogin />}/>
-            <Route path="/cadastro" element={<TelaCadastro />}/>
-            <Route path="/app/*" element={<Frame />}/>
-            <Route path="/*" element={<FrameOrLogin />}/>
+            <Route path="/login" element={<TelaLogin/>}/>
+            <Route path="/cadastro" element={<TelaCadastro/>}/>
+            <Route path="/app/*" element={<Frame turmasDisponiveis={turmas}/>}/>
+            <Route path="/*" element={<FrameOrLogin/>}/>
           </Routes>
         </Router>
       </PushNotificationProvider>

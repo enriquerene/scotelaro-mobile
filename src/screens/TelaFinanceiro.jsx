@@ -8,6 +8,7 @@ import {useUserStore} from "../services/userStore.context";
 import BackendService from '../services/backend.service';
 import FiltroSelect from "../components/FiltroSelect";
 import SelectDescritivo from "../components/SelectDescritivo";
+import { contato as contatoWhatsApp } from "../services/whatsapp.service";
 
 
 const mockNotificacoes = [
@@ -51,16 +52,16 @@ const CardPlanoVigente = ({plano, cancelarPlano}) => {
                 <div className="d-flex my-3">
                     <Icone name="qrcode" size={42} color="grey"/>
                     <div className="d-flex flex-column justify-content-center">
-                        <button className="bg-white border border-0 m-0 p-0 text-left text-green"
-                                style={{fontSize: 16, width: 102}}><strong>Pagar via PIX</strong></button>
+                        <a href={plano.link_pagamento} className="bg-white border border-0 m-0 p-0 text-left text-green"
+                                style={{fontSize: 16, width: 148}}><strong>Pagar mensalidade</strong></a>
                         <small><span className="text-muted">Válido até</span> <strong>10/08/2024</strong></small>
                     </div>
                 </div>
                 <div className="d-flex justify-content-between">
-                    <button className="bg-white border border-0 m-0 p-0 text-primary d-flex align-items-center">
+                    <a href={plano.link_contrato} className="bg-white border border-0 m-0 p-0 text-primary d-flex align-items-center">
                         <Icone name="docs" size={20} color="primary"/>
                         <strong className="px-1 pt-1">Ver contrato</strong>
-                    </button>
+                    </a>
                     <button
                         className="bg-white border border-0 m-0 p-0 text-danger d-flex align-items-center"
                         onClick={cancelarPlano}
@@ -215,26 +216,27 @@ const TelaFinanceiro = ({planos}) => {
     // }, []);
 
     const cancelarPlano = async () => {
-        try {
-            const res = await BackendService.cancelarPlano(credenciais.token);
-            if (BackendService.STATUS.BEM_SUCEDIDO(res.status.code)) {
-                notificar({
-                    mensagem: 'Plano cancelado com sucesso.',
-                    tipo: 'sucesso'
-                });
-                login(res.data, permaneceLogado());
-            } else {
-                notificar({
-                    mensagem: 'Não foi possível cancelar plano por falha de conexão com servidor.',
-                    tipo: 'erro'
-                });
-            }
-        } catch (e) {
-            notificar({
-                mensagem: 'Não foi possível cancelar plano por falha inesperada da aplicação.',
-                tipo: 'erro'
-            });
-        }
+        window.location.href = `whatsapp://send?phone=${contatoWhatsApp}&text=Gostaria de cancelar meu plano atual.`;
+        // try {
+        //     const res = await BackendService.cancelarPlano(credenciais.token);
+        //     if (BackendService.STATUS.BEM_SUCEDIDO(res.status.code)) {
+        //         notificar({
+        //             mensagem: 'Plano cancelado com sucesso.',
+        //             tipo: 'sucesso'
+        //         });
+        //         login(res.data, permaneceLogado());
+        //     } else {
+        //         notificar({
+        //             mensagem: 'Não foi possível cancelar plano por falha de conexão com servidor.',
+        //             tipo: 'erro'
+        //         });
+        //     }
+        // } catch (e) {
+        //     notificar({
+        //         mensagem: 'Não foi possível cancelar plano por falha inesperada da aplicação.',
+        //         tipo: 'erro'
+        //     });
+        // }
     }
 
     const inscreverPlano = async (planoEscolhido) => {
@@ -264,7 +266,7 @@ const TelaFinanceiro = ({planos}) => {
     return (
         <>
             <CardFinanceiro plano={credenciais ? credenciais.plano : null} cancelarPlano={cancelarPlano}
-                            opcoes={planos} inscreverPlano={inscreverPlano}/>
+                            opcoes={planos} inscreverPlano={inscreverPlano} />
             <AvisoOuListaDeNotificacoes
                 existemNotificacoes={notificacoes.length > 0}
                 reset={reset}

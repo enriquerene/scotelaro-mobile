@@ -1,7 +1,5 @@
-import data from "bootstrap/js/src/dom/data";
-
 class BackendService {
-  static BASE_URL = 'http://localhost:8000/api';
+  static BASE_URL = process.env.REACT_APP_BASE_URL;
   static ENDPOINTS = {
     REGISTER: `${this.BASE_URL}/auth/registrar`,
     LOGIN: `${this.BASE_URL}/auth/login`,
@@ -39,7 +37,10 @@ class BackendService {
   }
 
   static async getData(url) {
-    const r = await fetch(url);
+    const r = await fetch(url, {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'},
+    });
     return await r.json();
   }
 

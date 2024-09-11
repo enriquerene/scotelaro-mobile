@@ -46,9 +46,7 @@ const ListaDeTurmas = ({lista, reset, inscricaoNaTurma, planoAtual}) => {
   return <SemTurmasDisponiveis reset={reset}/>
 }
 
-const TelaTurmas = ({acaoInscricao, acaoExperimental}) => {
-  const [turmas, setTurmas] = useState([]);
-  const [carregando, setCarregando] = useState(true);
+const TelaTurmas = ({acaoInscricao, acaoExperimental, turmas}) => {
   const [modalidadeEscolhida, setModalidadeEscolhida] = React.useState({id: 0, texto: 'Todas'});
   const [horarioEscolhido, setHorarioEscolhido] = React.useState({id: 0, texto: 'Todos'});
   const [turmasFiltradas, setTurmasFiltradas] = React.useState([]);
@@ -131,25 +129,7 @@ const TelaTurmas = ({acaoInscricao, acaoExperimental}) => {
         return true;
       });
     setTurmasFiltradas(comFiltros);
-
   }, [turmas, modalidadeEscolhida, horarioEscolhido]);
-  useEffect(() => {
-    const turmasDoServidor = async () => {
-      try {
-        const r = await BackendService.obterListaDeTurmas();
-        if (BackendService.STATUS.BEM_SUCEDIDO(r.status.code)) {
-          setTurmas(r.data);
-        } else {
-          notificar({mensagem: 'Falha de conexão com o servidor. Não foi possível carregar turmas disponíveis.', tipo: 'erro'});
-        }
-      } catch (e) {
-        notificar({mensagem: 'Falha de conexão com o servidor. Não foi possível carregar turmas disponíveis.', tipo: 'erro'});
-      } finally {
-        setCarregando(false);
-      }
-    }
-    turmasDoServidor();
-  }, []);
 
   const inscricaoEmTurma = (turma) => {
     return (permanentemente) => {
@@ -171,11 +151,6 @@ const TelaTurmas = ({acaoInscricao, acaoExperimental}) => {
     }
   }
 
-  if (carregando) {
-    return (
-      <div>carregando...</div>
-    );
-  }
   return (
     <>
       <div className="d-flex flex-row align-items-center justify-content-evenly">

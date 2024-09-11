@@ -12,7 +12,7 @@ import TelaTurmas from "../screens/TelaTurmas";
 import {useUserStore} from "../services/userStore.context";
 import TituloDaTela from "./TituloDaTela";
 import BackendService from "../services/backend.service";
-const contatoWhatsApp = '5521970179121';
+import { contato as contatoWhatsApp } from "../services/whatsapp.service";
 
 const Mock = ({nome}) => {
   const funcionalidadesDasTelas = {
@@ -38,7 +38,7 @@ const Mock = ({nome}) => {
   );
 }
 
-const Frame = () => {
+const Frame = ({turmasDisponiveis}) => {
   const location = useLocation();
 
   const [planos, setPlanos] = useState([]);
@@ -78,7 +78,13 @@ const Frame = () => {
         <Route path="calendario" element={<Mock nome="calendario"/>}/>
         <Route path="financeiro" element={<TelaFinanceiro planos={planos} />}/>
         <Route path="perfil" element={<Mock nome="perfil"/>}/>
-        <Route path="turmas" element={<TelaTurmas acaoInscricao={inscricaoEmTurma} acaoExperimental={inscricaoAulaExperimental} />}/>
+        <Route path="turmas" element={
+          <TelaTurmas
+            acaoInscricao={inscricaoEmTurma}
+            acaoExperimental={inscricaoAulaExperimental}
+            turmas={turmasDisponiveis}
+          />
+        }/>
         <Route path="mensagens" element={<Mock nome="mensagens"/>}/>
         <Route path="*" element={<Navigate to="turmas"/>}/>
       </Routes>
