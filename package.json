@@ -1,48 +1,78 @@
 {
-  "name": "scotelaroapp",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@capacitor/android": "^6.1.2",
-    "@capacitor/cli": "^6.0.0",
-    "@capacitor/core": "^6.0.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "bootstrap": "^5.3.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.23.1",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
-  },
+  "name": "awesomestorybook",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "license": "MIT",
   "scripts": {
-    "start": "dotenv -e .env.development react-scripts start",
-    "start:prod": "dotenv -e .env.production react-scripts start",
-    "build": "dotenv -e .env.production react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "storybook:web": "storybook dev -p 6006 --no-open",
+    "build-storybook": "storybook build",
+    "storybook-generate": "sb-rn-get-stories",
+    "storybook": "cross-env EXPO_PUBLIC_STORYBOOK_ENABLED='true' expo start",
+    "storybook:ios": "cross-env EXPO_PUBLIC_STORYBOOK_ENABLED='true' expo start --ios",
+    "storybook:android": "cross-env EXPO_PUBLIC_STORYBOOK_ENABLED='true' expo start --android"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "@gorhom/bottom-sheet": "^5.1.2",
+    "@react-native-async-storage/async-storage": "2.1.2",
+    "@react-native-community/datetimepicker": "8.3.0",
+    "@react-native-community/slider": "4.5.6",
+    "@tamagui/config": "^1.132.15",
+    "@tamagui/core": "^1.132.15",
+    "@tamagui/font-inter": "^1.132.15",
+    "@tamagui/lucide-icons": "^1.132.20",
+    "@tamagui/shorthands": "^1.132.15",
+    "@tamagui/theme-base": "^1.132.15",
+    "date-fns": "^4.1.0",
+    "expo": "~53.0.9",
+    "expo-constants": "~17.1.6",
+    "expo-status-bar": "~2.2.3",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-native": "0.79.2",
+    "react-native-calendars": "^1.1313.0",
+    "react-native-gesture-handler": "~2.24.0",
+    "react-native-reanimated": "~3.17.4",
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-svg": "^15.12.1",
+    "react-native-web": "^0.20.0",
+    "tamagui": "^1.132.15"
   },
   "devDependencies": {
-    "@svgr/webpack": "^8.1.0",
-    "dotenv-cli": "^7.4.2"
-  }
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.25.4",
+    "@expo/metro-runtime": "~5.0.4",
+    "@storybook/addon-actions": "^8.6.14",
+    "@storybook/addon-backgrounds": "^8.6.14",
+    "@storybook/addon-controls": "^8.6.14",
+    "@storybook/addon-docs": "8.6.14",
+    "@storybook/addon-essentials": "8.6.14",
+    "@storybook/addon-viewport": "^8.6.14",
+    "@storybook/react": "8.6.14",
+    "@storybook/react-native-web-vite": "8.6.14",
+    "@types/react": "~19.0.10",
+    "babel-plugin-react-docgen-typescript": "^1.5.1",
+    "cross-env": "^7.0.3",
+    "storybook": "8.6.14",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5"
+  },
+  "resolutions": {
+    "react-docgen-typescript": "2.2.2",
+    "react-native-web": "^0.20.0"
+  },
+  "overrides": {
+    "react-docgen-typescript": "2.2.2",
+    "react-native-web": "^0.20.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "react-docgen-typescript": "2.2.2",
+      "react-native-web": "^0.20.0"
+    }
+  },
+  "private": true
 }

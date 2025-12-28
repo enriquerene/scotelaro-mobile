@@ -1,1 +1,0 @@
-export const contato = '5521970179121';
